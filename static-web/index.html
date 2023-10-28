@@ -12,6 +12,7 @@
     body {
       max-width: 600px;
       margin: auto;
+      background-color: rgb(208, 151, 208);
     }
 
     div {
@@ -29,22 +30,43 @@
     }
 
     .footnote {
-      color: rgba(0, 0, 255, 0.712);
+      color: rgb(255, 0, 93);
+      text-shadow: 1px 1px rgb(255,255,255);
+      font-size: 20px;
+      font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+      font-weight: lighter;
     }
 
     .carousel {
       height: 600px;
-      background-color: lightgreen;
-
+      background-color: beige;
+      box-shadow: -5px 10px 60px 25px rgb(255, 255, 255);
+    
+    }
+    h2, h1{
+      text-shadow: 1px 1px burlywood;
+      color: beige;
+      font-family: monospace;
+      text-align: center;
+      font-size: 25px;
+    }
+    h2{
+      font-size: 30px;
+    }
+    h2:hover{
+      color: rgb(255, 0, 93);
+      text-shadow: 2px 2px white;
+      transition: 2s;
     }
   </style>
 </head>
 
 <body>
 
-  <div><img style="width:300px; height:100px" src="https://clarusway.com/wp-content/uploads/2022/12/clarusway-logo-black.png" /></div>
+  <div><img src="https://clarusway.com/wp-content/uploads/2022/12/clarusway-logo-black.png" width="50%"/></div>
 
-  <h2> Project: Student_Name's Kittens Carousel</h2>
+  <h1> Project:</h1>
+  <h2>Turan Gozukara's Kittens Carousel</h2>
 
   <div id="myCarousel" class="carousel slide" data-ride="carousel">
     <!-- Indicators -->
@@ -79,7 +101,8 @@
   </div>
 
 
-  <p class="footnote"><i>This static website is deployed by <b> Students_Name </b> on AWS S3, served through Cloudfront and Route 53 using AWS Clouldformation Service.</i></p>
+  <p class="footnote"><i>This static website is deployed by <b> Turan Gozukara </b> on AWS EC2 Instance using AWS
+      Clouldformation Service.</i></p>
 </body>
 
 </html>

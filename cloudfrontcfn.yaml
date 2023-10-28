@@ -1,0 +1,90 @@
+AWSTemplateFormatVersion: 2010-09-09
+Description: |
+  Kittens Carousel is a static website application deployed on AWS Simple Storage Service (S3), served through Cloudfront and Route 53 using AWS Cloudformation Service.
+Parameters:
+  
+  DomainName:
+    Description: The website domain name.
+    Type: String
+    AllowedPattern: (?!-)[a-zA-Z0-9-.]{1,63}(?<!-)
+
+Resources:
+  MyBucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: !Ref DomainName
+      OwnershipControls:
+        Rules:
+          - ObjectOwnership: BucketOwnerEnforced
+      PublicAccessBlockConfiguration:
+        BlockPublicAcls: FALSE
+      WebsiteConfiguration:
+        IndexDocument: index.html
+  
+  S3BucketPolicy:
+    Type: AWS::S3::BucketPolicy
+    Properties:
+      Bucket: !Ref MyBucket
+      PolicyDocument:
+        Version: 2012-10-17
+        Statement:
+          - Action:
+              - 's3:GetObject'
+            Effect: Allow
+            Resource: !Join
+              - ''
+              - - 'arn:aws:s3:::'
+                - !Ref MyBucket
+                - /*
+            Principal: '*'
+  MyCloudFront:
+    Type: AWS::CloudFront::Distribution
+    Properties:
+      DistributionConfig:
+        Aliases: 
+          - !Ref DomainName
+        Comment: First cloudfront cfn
+        DefaultCacheBehavior: 
+          AllowedMethods: 
+            - GET
+            - HEAD
+          CachePolicyId: 658327ea-f89d-4fab-a63d-7e88639e58f6
+          Compress: true
+          TargetOriginId: turan-cfr
+          ViewerProtocolPolicy: allow-all
+        DefaultRootObject: index.html
+        Enabled: true
+        HttpVersion: http2
+        Origins: 
+          - CustomOriginConfig:
+              OriginProtocolPolicy: http-only
+            DomainName: !Select [2, !Split ["/", !GetAtt MyBucket.WebsiteURL]]
+            Id: turan-cfr
+                 
+        PriceClass: PriceClass_All
+        ViewerCertificate: 
+          AcmCertificateArn: arn:aws:acm:us-east-1:488116744093:certificate/19816fb1-284e-416b-8473-a1f8bf83ad8b
+          MinimumProtocolVersion: TLSv1.2_2021
+          SslSupportMethod: sni-only
+
+  MyRoute53:
+    Type: AWS::Route53::RecordSetGroup
+    Properties:
+      HostedZoneId: Z09962081D3RO9L35DRLZ
+      RecordSets: 
+      - AliasTarget: 
+          DNSName: !GetAtt MyCloudFront.DomainName
+          HostedZoneId: Z2FDTNDATAQYW2
+        Name: !Ref DomainName
+        Type: A
+
+Outputs:
+  BucketName: 
+    Description: S3 Bucket URL for Kittens Website
+    Value: !GetAtt MyBucket.WebsiteURL
+  CloudfrontEndpoint:
+    Description: Endpoint for Kittens Cloudfront
+    Value: !GetAtt MyCloudFront.DomainName
+  FullDomainName:
+    Description: Full Domain Name of my Application
+    Value: !Ref DomainName
