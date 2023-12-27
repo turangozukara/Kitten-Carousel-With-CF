@@ -7,7 +7,6 @@ Parameters:
     Description: The website domain name.
     Type: String
     AllowedPattern: (?!-)[a-zA-Z0-9-.]{1,63}(?<!-)
-
 Resources:
   MyBucket:
     Type: AWS::S3::Bucket
